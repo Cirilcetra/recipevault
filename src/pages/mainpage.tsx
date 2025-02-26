@@ -1,38 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
 import './mainpage.css';
-import { db } from '../firebase';
-import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from 'firebase/firestore';
 
 const MainPage: React.FC = () => {
   const navigate = useNavigate();
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
-  const [recipe, setRecipe] = useState('');
   const [loading, setLoading] = useState(false);
-  const [recipeTitle, setRecipeTitle] = useState('');
-  const [recipeDescription, setRecipeDescription] = useState('');
-  const [channelTitle, setChannelTitle] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
   const [recipes, setRecipes] = useState<any[]>([]);
-  const [videoDetails, setVideoDetails] = useState('');
-  const [transcript, setTranscript] = useState('');
-
-  useEffect(() => {
-    // Set up real-time listener for recipes
-    const q = query(collection(db, 'recipes'), orderBy('createdAt', 'desc'));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const recipesData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setRecipes(recipesData);
-    });
-
-    // Cleanup subscription
-    return () => unsubscribe();
-  }, []);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSubmit = async (url: string) => {
     setLoading(true);
@@ -43,7 +19,6 @@ const MainPage: React.FC = () => {
         throw new Error('Please enter a valid YouTube URL');
       }
 
-      console.log('Sending request to backend...');
       const response = await fetch('http://localhost:8000/process-video', {
         method: 'POST',
         headers: {
@@ -59,31 +34,16 @@ const MainPage: React.FC = () => {
 
       const data = await response.json();
       
-      // Extract title and description from the recipe
-      const recipeLines = data.recipe.split('\n');
-      const recipeName = recipeLines[0].replace('# ', ''); // Remove markdown heading
-      
-      // Get the description (usually the next non-empty lines after title)
-      let description = '';
-      for (let i = 1; i < recipeLines.length; i++) {
-        const line = recipeLines[i].trim();
-        if (line && !line.startsWith('#')) {
-          description = line;
-          break;
-        }
-      }
-
-      // Add to local recipes
-      const newRecipe = {
+      // Add to local recipes array
+      setRecipes(prevRecipes => [{
         id: Date.now().toString(),
-        title: recipeName,
-        description: description,
+        title: data.recipe.split('\n')[0].replace('# ', ''),
+        description: data.recipe.split('\n').slice(1).find((line: string) => line.trim() && !line.startsWith('#')) || '',
         recipe: data.recipe,
         channelTitle: data.videoDetails.channelTitle || 'Unknown Channel',
         createdAt: new Date().toISOString()
-      };
+      }, ...prevRecipes]);
 
-      setRecipes(prevRecipes => [newRecipe, ...prevRecipes]);
       setUrl(''); // Clear input after successful submission
     } catch (error: any) {
       console.error('Error details:', error);
@@ -93,7 +53,9 @@ const MainPage: React.FC = () => {
     }
   };
 
-  const handleRecipeClick = () => {
+  const handleRecipeClick = (recipe: any) => {
+    localStorage.setItem('currentRecipe', recipe.recipe);
+    localStorage.setItem('channelTitle', recipe.channelTitle);
     navigate('/recipe');
   };
 
@@ -110,7 +72,7 @@ const MainPage: React.FC = () => {
           <div className="search-container">
             <input 
               type="text" 
-              placeholder="Search recipies"
+              placeholder="Search recipes"
               className="search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -123,11 +85,7 @@ const MainPage: React.FC = () => {
         <div 
           key={recipe.id} 
           className="recipe-card" 
-          onClick={() => {
-            localStorage.setItem('currentRecipe', recipe.recipe);
-            localStorage.setItem('channelTitle', recipe.channelTitle);
-            handleRecipeClick();
-          }}
+          onClick={() => handleRecipeClick(recipe)}
         >
           <div className="recipe-card-content">
             <div className="recipe-card-header">
@@ -154,7 +112,7 @@ const MainPage: React.FC = () => {
             className="add-button"
             disabled={loading}
           >
-            {loading ? 'Processing...' : 'Add recipie'}
+            {loading ? 'Processing...' : 'Add recipe'}
           </button>
         </div>
         {error && <div className="error-message">{error}</div>}

@@ -48,43 +48,15 @@ def extract_video_id(url: str) -> Optional[str]:
     return None
 
 def get_video_details(video_id: str):
-    try:
-        api_key = os.getenv("YOUTUBE_API_KEY")
-        if not api_key:
-            # Return basic details if no API key is configured
-            return {
-                "title": "YouTube Video",
-                "channelTitle": "Unknown Channel",
-                "description": ""
-            }
-            
-        url = f"https://www.googleapis.com/youtube/v3/videos?part=snippet&id={video_id}&key={api_key}"
-        
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            if data.get("items"):
-                snippet = data["items"][0]["snippet"]
-                return {
-                    "title": snippet["title"],
-                    "channelTitle": snippet["channelTitle"],
-                    "description": snippet["description"]
-                }
-        
-        # Return basic details if API request fails
-        return {
-            "title": "YouTube Video",
-            "channelTitle": "Unknown Channel",
-            "description": ""
-        }
-    except Exception as e:
-        print(f"Error fetching video details: {e}")
-        # Return basic details on error
-        return {
-            "title": "YouTube Video",
-            "channelTitle": "Unknown Channel",
-            "description": ""
-        }
+    """
+    Simplified to return basic video details since we don't need the full YouTube API
+    for transcript functionality
+    """
+    return {
+        "title": "YouTube Video",
+        "channelTitle": "Unknown Channel",
+        "description": ""
+    }
 
 def generate_recipe(transcript: str) -> str:
     prompt = f"""
@@ -128,11 +100,11 @@ async def process_video(request: VideoRequest):
         if not video_id:
             raise HTTPException(status_code=400, detail="Invalid YouTube URL")
 
-        # Get video details - now won't raise an exception
+        # Get basic video details
         video_details = get_video_details(video_id)
 
-        # Get transcript
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        # Get transcript - using direct API call, no YouTube API key needed
+        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en'])
         formatter = TextFormatter()
         transcript_text = formatter.format_transcript(transcript)
 
