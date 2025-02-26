@@ -1,0 +1,258 @@
+.main-page {
+  padding-top: 174px;
+  width: 100%;
+  max-width: 412px;
+  margin: 0 auto;
+  background-color: white;
+  box-sizing: border-box;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 100px;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  margin: 0;
+  padding: 15.5px 20px;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1000;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+h1 {
+  font-size: clamp(36px, 8vw, 49px);
+  font-weight: normal;
+  margin: 0;
+  width: 100%;
+  max-width: 412px;
+  margin: 0 auto;
+  word-wrap: break-word;
+  text-align: left;
+  line-height: 1;
+}
+
+.logo-green {
+  color: #57CF44;
+}
+
+.logo-orange {
+  color: #FF9500;
+}
+
+.url-container {
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.url-input {
+  flex: 2;
+  height: 48px;
+  padding: 0 12px;
+  border: 1px solid #E6E6E6;
+  border-radius: 16px;
+  background-color: #F8F8F8;
+  font-size: clamp(14px, 4vw, 16px);
+  color: #000;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.url-input::placeholder {
+  color: #C4BCBC;
+}
+
+.action-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.add-button {
+  flex: 1;
+  height: 48px;
+  padding: 0 clamp(12px, 3vw, 24px);
+  background-color: #57CF44;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: clamp(16px, 4vw, 22px);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  min-width: min-content;
+}
+
+.add-button:hover {
+  background-color: #4bb83a;
+}
+
+.add-button:disabled {
+  background-color: #9ed49a;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #ff4444;
+  font-size: 14px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.recipe-content {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.recipe-content h1,
+.recipe-content h2,
+.recipe-content h3 {
+  margin: 24px 0 16px;
+  color: #333;
+}
+
+.recipe-content h1:first-child,
+.recipe-content h2:first-child,
+.recipe-content h3:first-child {
+  margin-top: 0;
+}
+
+.recipe-content ul,
+.recipe-content ol {
+  padding-left: 24px;
+  margin: 16px 0;
+}
+
+.recipe-content li {
+  margin: 8px 0;
+}
+
+.recipe-content p {
+  margin: 0 0 16px 0;
+}
+
+.recipe-content p:last-child {
+  margin-bottom: 0;
+}
+
+.floating-controls {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 1000;
+}
+
+.controls-container {
+  display: flex;
+  gap: 8px;
+  max-width: 380px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 380px) {
+  .floating-controls {
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+  }
+  
+  .controls-container {
+    gap: 4px;
+  }
+}
+
+.recipe-card {
+  margin: 0px;
+  padding: 16px;
+  background-color: #F7F7F7;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.recipe-card:hover {
+  transform: scale(1.01);
+}
+
+.recipe-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recipe-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.recipe-card-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  margin-top: 8px;
+  color: #666;
+}
+
+.recipe-card-description p {
+  margin: 0;
+}
+
+.header-green {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #57CF44;
+  padding: 27px 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1000;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.header-content {
+  max-width: 412px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.search-container {
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  background-color: #F8F8F8;
+  border: 1px solid #E6E6E6;
+  border-radius: 16px;
+  font-size: 14px;
+  color: #000000;
+  box-sizing: border-box;
+}
+
+.search-input::placeholder {
+  color: #BCBCBC;
+}

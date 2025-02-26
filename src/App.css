@@ -1,5 +1,14 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .App {
-  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-logo {
@@ -34,5 +43,52 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Mobile-first styles */
+.main-page {
+  padding: 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+  flex: 1;
+}
+
+.main-page h1 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  text-align: left;
+}
+
+.main-page p {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+/* Tablet and desktop styles */
+@media (min-width: 768px) {
+  .main-page {
+    padding: 2rem;
+    max-width: 768px;
+  }
+
+  .main-page h1 {
+    font-size: 2rem;
+  }
+
+  .main-page p {
+    font-size: 1.2rem;
+  }
+}
+
+/* PWA safe areas for notched devices */
+@supports (padding: max(0px)) {
+  .main-page {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
 }
