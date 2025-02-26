@@ -92,6 +92,19 @@ def generate_recipe(transcript: str) -> str:
     
     return response.choices[0].message.content
 
+def handle_video_error(error: Exception) -> None:
+    """Centralized error handling for video processing"""
+    error_message = str(error)
+    if "No transcript found" in error_message:
+        raise HTTPException(status_code=404, detail="No transcript available for this video")
+    raise HTTPException(status_code=500, detail=error_message)
+
+def get_video_transcript(video_id: str) -> str:
+    """Get and format video transcript"""
+    transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en'])
+    formatter = TextFormatter()
+    return formatter.format_transcript(transcript)
+
 @app.post("/process-video")
 async def process_video(request: VideoRequest):
     try:
@@ -100,14 +113,10 @@ async def process_video(request: VideoRequest):
         if not video_id:
             raise HTTPException(status_code=400, detail="Invalid YouTube URL")
 
-        # Get basic video details
+        # Get basic video details and transcript
         video_details = get_video_details(video_id)
-
-        # Get transcript - using direct API call, no YouTube API key needed
-        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en'])
-        formatter = TextFormatter()
-        transcript_text = formatter.format_transcript(transcript)
-
+        transcript_text = get_video_transcript(video_id)
+        
         # Generate recipe
         recipe = generate_recipe(transcript_text)
 
@@ -118,10 +127,7 @@ async def process_video(request: VideoRequest):
         }
 
     except Exception as e:
-        error_message = str(e)
-        if "No transcript found" in error_message:
-            raise HTTPException(status_code=404, detail="No transcript available for this video")
-        raise HTTPException(status_code=500, detail=error_message)
+        handle_video_error(e)
 
 @app.get("/")
 async def root():
