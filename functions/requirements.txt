@@ -1,0 +1,13 @@
+firebase-admin==6.4.0
+firebase-functions==0.1.1
+youtube-transcript-api==0.6.2
+openai==0.28.0
+requests==2.31.0
+python-dotenv==1.0.1 
+
+
+
+curl -X POST \
+  http://localhost:5001/recipevault-79a1b/us-central1/processVideo \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://www.youtube.com/watch?v=bF4bp-lRbDg"}'

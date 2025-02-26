@@ -19,7 +19,7 @@ const MainPage: React.FC = () => {
         throw new Error('Please enter a valid YouTube URL');
       }
 
-      const response = await fetch('http://localhost:8000/process-video', {
+      const response = await fetch('https://processvideo-jjgsgztfmq-uc.a.run.app', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
